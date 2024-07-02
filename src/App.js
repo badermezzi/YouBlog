@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import './App.css';
 import logo from "./logo512.png"
 import thumbnail from "./thumbnail.png"
@@ -47,8 +48,8 @@ function App() {
   return (
     <div>
       <Header />
-      <Hero />
       <Articles />
+      <Hero />
       <Footer />
     </div>
   );
@@ -58,18 +59,19 @@ export default App;
 
 
 function Header() {
-  return <div className='bg-gradient-to-b from-gray-950 flex items-center justify-between p-3  sticky top-0 '>
-    <img className='w-10 ml-5 cursor-pointer' src={logo} alt="logo" />
-    <div className='flex gap-5 mr-5' >
+  return <div className=' flex items-center justify-center pb-3 px-8 pt-7   bg-gradient-to-b from-black from-1%   to-100%'>
+    {/* <img className='w-10 ml-5 cursor-pointer drop-shadow-glow' src={logo} alt="logo" /> */}
+    <img className='w-10 cursor-pointer drop-shadow-glow' src={logo} alt="logo" />
+    {/* <div className='flex gap-9 mr-5' >
       <Button>Home</Button>
       <Button>+ Add New Post</Button>
       <Button>Contact Us</Button>
-    </div>
+    </div> */}
   </div>
 }
 
 function Button({ children }) {
-  return <span className='bg-white text-black font-bold text-sm  bold px-4 py-2 rounded-lg cursor-pointer hover:bg-slate-200 max-w-fit' >{children}</span>
+  return <span className='bg-white text-black font-bold text-[13px]  bold px-4 py-2 rounded-lg cursor-pointer hover:bg-slate-200 max-w-fit' >{children}</span>
 }
 
 function Hero() {
@@ -81,30 +83,108 @@ function Hero() {
 
 
 function Articles() {
-  return <div className='flex justify-center items-center  p-8  '>
+
+  const [addingPost, setAddingPost] = useState(false);
+
+  const [imageURL, setImageURL] = useState();
+  const [titel, setTitel] = useState("The Blog Title");
+  const [blog, setBlog] = useState("Blog Content");
+
+
+
+
+  return <div className='flex justify-center items-center  px-8  '>
     <div className='  grid grid-cols-3 gap-4   '>
 
-      {blogs.map((blog) => (<Article thumbnail={blog.img} title={blog.title} key={blog.id} />))}
+      {addingPost || <div onClick={() => (setAddingPost(true))} className='h-[315px] bg-gray-950/[.5] border-4 border-gray-400/[.5] rounded-2xl border-dashed m-5 flex justify-center text-center items-center pb-6 cursor-pointer hover:bg-gray-900/[.6]'>
+        <span className='text-gray-400/[.7] text-9xl'>+</span>
+      </div>}
+
+      {addingPost && <div className="col-span-2 h-[315px] bg-gray-950/[.5] border-4 border-gray-400/[.5] rounded-2xl border-dashed m-5 p-5 overflow-hidden">
+        <form className="flex flex-col space-y-4 overflow-y-auto h-full custom-scrollbar p-2">
+          <div>
+            <label className="text-white block mb-1">Image URL:</label>
+            <input
+              type="text"
+              placeholder="Enter image URL"
+              className="w-full p-2 bg-gray-800 text-gray-300 border border-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={imageURL}
+              onChange={(e) => (setImageURL(e.target.value))}
+            />
+          </div>
+          <div>
+            <label className="text-white block mb-1">Blog Title:</label>
+            <input
+              type="text"
+              placeholder="Enter blog title"
+              className="w-full p-2 bg-gray-800 text-gray-300 border border-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={titel}
+              onChange={(e) => (setTitel(e.target.value))}
+            />
+          </div>
+          <div>
+            <label className="text-white block mb-1">Blog Content:</label>
+            <textarea
+              placeholder="Enter blog content"
+              className="w-full p-2 bg-gray-800 text-gray-300 border border-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              rows="4"
+              value={blog}
+              onChange={(e) => (setBlog(e.target.value))}
+            ></textarea>
+          </div>
+          <div className="flex justify-end space-x-4 mt-auto">
+            <button
+              type="button"
+              className="p-2 bg-gray-700 text-white rounded hover:bg-gray-600"
+              onClick={() => (setAddingPost(false))}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="p-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
+              Publish
+            </button>
+          </div>
+        </form>
+      </div>
+
+      }
+
+
+      {addingPost && <div className='bg-gradient-to-b from-cyan-900  rounded-2xl m-5 text-white cursor-pointer hover:bg-gray-900'>
+        <div className='w-full h-[180px] overflow-hidden rounded-t-2xl'>
+          <img className=' w-full h-full object-cover ' src={imageURL || `https://www.osdla.com/wp-content/uploads/2014/10/placeholder-1.png`} alt="blog1" />
+        </div>
+        <div className='p-3 h-[135px] w-100% max-w-100%'>
+          <h2 className='py-2 font-bold text-wrap break-words'>{titel}</h2>
+          <p className='text-sm text-gray-400 pb-2 w-100% h-auto  text-wrap break-words'>{blog?.length >= 120 ? <span> {blog.slice(0, 120).trim()} ... <span className='text-white'>{"=>Read More"}</span> </span> : blog}</p>
+        </div>
+      </div>}
+
+
+      {blogs.map((blog) => (<Article thumbnail={blog.img} title={blog.title} content={blog.content} key={blog.id} />))}
 
     </div >
   </div >
 }
 
-function Article({ thumbnail, title }) {
-  return <div className='bg-gradient-to-b from-cyan-900 max-w-80 rounded-2xl m-5 text-white cursor-pointer hover:bg-gray-900  '>
-    <div className='w-full h-[170px] overflow-hidden rounded-t-2xl'>
+function Article({ thumbnail, title, content }) {
+  return <div className='bg-gradient-to-b from-cyan-900  rounded-2xl m-5 text-white cursor-pointer hover:bg-gray-900  '>
+    <div className='w-full h-[180px] overflow-hidden rounded-t-2xl'>
       <img className=' w-full h-full object-cover rounded-t-2xl' src={thumbnail} alt="blog1" />
     </div>
-    <div className='p-3'>
+    <div className='p-3 h-[135px]'>
       <h2 className='py-2 font-bold'>{title}</h2>
-      <p className='text-sm text-gray-400'>Must-have tools and apps for working remotely. Stay productive and connected while exploring the world as a digital nomad... <span className='text-white'>{"=>"} Read More</span></p>
+      <p className='text-sm text-gray-400 pb-2'>{content}... <span className='text-white'>{"=>"} Read More</span></p>
     </div>
   </div >
 }
 
 
 function Footer() {
-  return <div className='p-5'>
-    <p className='text-white font-bold text-xl text-center '>YouBlog. 2024</p>
+  return <div className=' bg-cyan-950 p-5'>
+    <p className='  text-white font-bold text-xl text-center '>YouBlog. 2024</p>
   </div>
 }

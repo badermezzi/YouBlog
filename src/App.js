@@ -84,13 +84,36 @@ function Hero() {
 
 function Articles() {
 
+  const [newBlogs, setNewBlogs] = useState(blogs);
+
   const [addingPost, setAddingPost] = useState(false);
 
-  const [imageURL, setImageURL] = useState();
+  const [imageURL, setImageURL] = useState("https://www.osdla.com/wp-content/uploads/2014/10/placeholder-1.png");
   const [titel, setTitel] = useState("The Blog Title");
   const [blog, setBlog] = useState("Blog Content");
 
 
+  function blogFormSubmit(e) {
+    e.preventDefault()
+
+
+    if (!imageURL || imageURL === "https://www.osdla.com/wp-content/uploads/2014/10/placeholder-1.png" || !titel || !blog) return;
+
+    const id = new Date().getTime() + Math.round(Math.random() * 111111);
+
+    setNewBlogs([{
+      id,
+      img: imageURL,
+      title: titel,
+      content: blog
+    }, ...newBlogs]);
+
+    setImageURL("https://www.osdla.com/wp-content/uploads/2014/10/placeholder-1.png");
+    setTitel("The Blog Title");
+    setBlog("Blog Content");
+    setAddingPost(false);
+
+  };
 
 
   return <div className='flex justify-center items-center  px-8  '>
@@ -101,7 +124,7 @@ function Articles() {
       </div>}
 
       {addingPost && <div className="col-span-2 h-[315px] bg-gray-950/[.5] border-4 border-gray-400/[.5] rounded-2xl border-dashed m-5 p-5 overflow-hidden">
-        <form className="flex flex-col space-y-4 overflow-y-auto h-full custom-scrollbar p-2">
+        <form onSubmit={blogFormSubmit} className="flex flex-col space-y-4 overflow-y-auto h-full custom-scrollbar p-2">
           <div>
             <label className="text-white block mb-1">Image URL:</label>
             <input
@@ -153,9 +176,10 @@ function Articles() {
       }
 
 
+
       {addingPost && <div className='bg-gradient-to-b from-cyan-900  rounded-2xl m-5 text-white cursor-pointer hover:bg-gray-900'>
         <div className='w-full h-[180px] overflow-hidden rounded-t-2xl'>
-          <img className=' w-full h-full object-cover ' src={imageURL || `https://www.osdla.com/wp-content/uploads/2014/10/placeholder-1.png`} alt="blog1" />
+          <img className=' w-full h-full object-cover ' src={imageURL} alt="blog1" />
         </div>
         <div className='p-3 h-[135px] w-100% max-w-100%'>
           <h2 className='py-2 font-bold text-wrap break-words'>{titel}</h2>
@@ -164,7 +188,7 @@ function Articles() {
       </div>}
 
 
-      {blogs.map((blog) => (<Article thumbnail={blog.img} title={blog.title} content={blog.content} key={blog.id} />))}
+      {newBlogs.map((blog) => (<Article thumbnail={blog.img} title={blog.title} content={blog.content} key={blog.id} />))}
 
     </div >
   </div >
@@ -188,3 +212,4 @@ function Footer() {
     <p className='  text-white font-bold text-xl text-center '>YouBlog. 2024</p>
   </div>
 }
+

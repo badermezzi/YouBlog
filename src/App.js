@@ -90,14 +90,14 @@ function Articles() {
 
   const [imageURL, setImageURL] = useState("https://www.osdla.com/wp-content/uploads/2014/10/placeholder-1.png");
   const [titel, setTitel] = useState("The Blog Title");
-  const [blog, setBlog] = useState("Blog Content");
+  const [blogContent, setBlogContent] = useState("Blog Content");
 
 
   function blogFormSubmit(e) {
     e.preventDefault()
 
 
-    if (!imageURL || imageURL === "https://www.osdla.com/wp-content/uploads/2014/10/placeholder-1.png" || !titel || !blog) return;
+    if (!imageURL || imageURL === "https://www.osdla.com/wp-content/uploads/2014/10/placeholder-1.png" || !titel || !blogContent) return;
 
     const id = new Date().getTime() + Math.round(Math.random() * 111111);
 
@@ -105,12 +105,12 @@ function Articles() {
       id,
       img: imageURL,
       title: titel,
-      content: blog
+      content: blogContent
     }, ...newBlogs]);
 
     setImageURL("https://www.osdla.com/wp-content/uploads/2014/10/placeholder-1.png");
     setTitel("The Blog Title");
-    setBlog("Blog Content");
+    setBlogContent("Blog Content");
     setAddingPost(false);
 
   };
@@ -129,9 +129,9 @@ function Articles() {
             <label className="text-white block mb-1">Image URL:</label>
             <input
               type="text"
-              placeholder="Enter image URL"
+              placeholder="Enter image URL| If image URL is correct, you'll see the image here ==>"
               className="w-full p-2 bg-gray-800 text-gray-300 border border-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={imageURL}
+              value={imageURL === "https://www.osdla.com/wp-content/uploads/2014/10/placeholder-1.png" ? "" : imageURL}
               onChange={(e) => (setImageURL(e.target.value))}
             />
           </div>
@@ -140,8 +140,9 @@ function Articles() {
             <input
               type="text"
               placeholder="Enter blog title"
+              maxLength={41}
               className="w-full p-2 bg-gray-800 text-gray-300 border border-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={titel}
+              value={titel === "The Blog Title" ? "" : titel}
               onChange={(e) => (setTitel(e.target.value))}
             />
           </div>
@@ -151,8 +152,8 @@ function Articles() {
               placeholder="Enter blog content"
               className="w-full p-2 bg-gray-800 text-gray-300 border border-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               rows="4"
-              value={blog}
-              onChange={(e) => (setBlog(e.target.value))}
+              value={blogContent === "Blog Content" ? "" : blogContent}
+              onChange={(e) => (setBlogContent(e.target.value))}
             ></textarea>
           </div>
           <div className="flex justify-end space-x-4 mt-auto">
@@ -183,12 +184,12 @@ function Articles() {
         </div>
         <div className='p-3 h-[135px] w-100% max-w-100%'>
           <h2 className='py-2 font-bold text-wrap break-words'>{titel}</h2>
-          <p className='text-sm text-gray-400 pb-2 w-100% h-auto  text-wrap break-words'>{blog?.length >= 120 ? <span> {blog.slice(0, 120).trim()} ... <span className='text-white'>{"=>Read More"}</span> </span> : blog}</p>
+          <p className='text-sm text-gray-400 pb-2 w-100% h-auto  text-wrap break-words'>{blogContent?.length >= 120 ? <span> {blogContent.slice(0, 120).trim()} ... <span className='text-white'>{"=>Read More"}</span> </span> : blogContent}</p>
         </div>
       </div>}
 
 
-      {newBlogs.map((blog) => (<Article thumbnail={blog.img} title={blog.title} content={blog.content} key={blog.id} />))}
+      {newBlogs.map((blog) => (<Article thumbnail={blog.img} title={blog.title} content={blog.content} key={blog.id} blogContent={blogContent} />))}
 
     </div >
   </div >
@@ -201,7 +202,7 @@ function Article({ thumbnail, title, content }) {
     </div>
     <div className='p-3 h-[135px]'>
       <h2 className='py-2 font-bold'>{title}</h2>
-      <p className='text-sm text-gray-400 pb-2'>{content}... <span className='text-white'>{"=>"} Read More</span></p>
+      <p className='text-sm text-gray-400 pb-2'>{content?.length >= 120 ? <span> {content.slice(0, 120).trim()} ... <span className='text-white'>{"=>Read More"}</span> </span> : content}</p>
     </div>
   </div >
 }
@@ -212,4 +213,3 @@ function Footer() {
     <p className='  text-white font-bold text-xl text-center '>YouBlog. 2024</p>
   </div>
 }
-

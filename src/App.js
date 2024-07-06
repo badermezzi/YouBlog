@@ -88,9 +88,9 @@ function Articles() {
 
   const [addingPost, setAddingPost] = useState(false);
 
-  const [imageURL, setImageURL] = useState("https://www.osdla.com/wp-content/uploads/2014/10/placeholder-1.png");
-  const [titel, setTitel] = useState("The Blog Title");
-  const [blogContent, setBlogContent] = useState("Blog Content");
+  const [imageURL, setImageURL] = useState("");
+  const [titel, setTitel] = useState("");
+  const [blogContent, setBlogContent] = useState("");
 
 
   function blogFormSubmit(e) {
@@ -108,8 +108,8 @@ function Articles() {
       content: blogContent
     }, ...newBlogs]);
 
-    setImageURL("https://www.osdla.com/wp-content/uploads/2014/10/placeholder-1.png");
-    setTitel("The Blog Title");
+    setImageURL("");
+    setTitel("");
     setBlogContent("Blog Content");
     setAddingPost(false);
 
@@ -131,7 +131,7 @@ function Articles() {
               type="text"
               placeholder="Enter image URL| If image URL is correct, you'll see the image here ==>"
               className="w-full p-2 bg-gray-800 text-gray-300 border border-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={imageURL === "https://www.osdla.com/wp-content/uploads/2014/10/placeholder-1.png" ? "" : imageURL}
+              value={imageURL}
               onChange={(e) => (setImageURL(e.target.value))}
             />
           </div>
@@ -180,11 +180,11 @@ function Articles() {
 
       {addingPost && <div className='bg-gradient-to-b from-cyan-900  rounded-2xl m-5 text-white cursor-pointer hover:bg-gray-900'>
         <div className='w-full h-[180px] overflow-hidden rounded-t-2xl'>
-          <img className=' w-full h-full object-cover ' src={imageURL} alt="blog1" />
+          <img className=' w-full h-full object-cover ' src={imageURL || "https://www.osdla.com/wp-content/uploads/2014/10/placeholder-1.png"} alt="blog1" />
         </div>
         <div className='p-3 h-[135px] w-100% max-w-100%'>
-          <h2 className='py-2 font-bold text-wrap break-words'>{titel}</h2>
-          <p className='text-sm text-gray-400 pb-2 w-100% h-auto  text-wrap break-words'>{blogContent?.length >= 120 ? <span> {blogContent.slice(0, 120).trim()} ... <span className='text-white'>{"=>Read More"}</span> </span> : blogContent}</p>
+          <h2 className='py-2 font-bold text-wrap break-words'>{titel || "The Blog Title"}</h2>
+          <p className='text-sm text-gray-400 pb-2 w-100% h-auto  text-wrap break-words'>{(blogContent?.length >= 120 ? <span> {blogContent.slice(0, 120).trim()} ... <span className='text-white'>{"=>Read More"}</span> </span> : blogContent) || "Blog Content"}</p>
         </div>
       </div>}
 

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import logo from "./logo512.png"
 import thumbnail from "./thumbnail.png"
@@ -84,7 +84,11 @@ function Hero() {
 
 function Articles() {
 
-  const [newBlogs, setNewBlogs] = useState(blogs);
+  const [newBlogs, setNewBlogs] = useState(JSON.parse(localStorage.getItem("newBlogs")) || blogs);
+
+  useEffect(() => {
+    localStorage.setItem("newBlogs", JSON.stringify(newBlogs))
+  }, [newBlogs]);
 
   const [addingPost, setAddingPost] = useState(false);
 
